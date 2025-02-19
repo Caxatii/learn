@@ -7,7 +7,7 @@ public class CoinView : MonoBehaviour
     public void Initialize(Coin coin)
     {
         if (_coin == null)
-            coin = _coin;
+            _coin = coin;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

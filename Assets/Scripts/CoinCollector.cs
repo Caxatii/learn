@@ -6,6 +6,6 @@ public class CoinCollector : MonoBehaviour
 
     public void Add(Coin coin)
     {
-
+        _value += coin.Value;
     }
 }

@@ -1,24 +1,23 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CoinSpawner : MonoBehaviour
 {
-    [SerializeField] private int _minCoins;
     [SerializeField] private bool _isRandom;
+    [SerializeField] private int _minCoins;
 
     [SerializeField] private CoinView _coinPrefab;
     [SerializeField] private List<Transform> _points;
 
     private void Awake()
     {
+        if (_minCoins > _points.Count)
+            _minCoins = _points.Count;
+
         if (_isRandom)
             RandomSpawn();
         else
             Spawn();
-
-        if (_minCoins > _points.Count)
-            _minCoins = _points.Count;
     }
 
     private void Spawn()
