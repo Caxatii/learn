@@ -2,7 +2,7 @@
 
 public static class ListExtensions
 {
-    private static System.Random random = new System.Random();
+    private static System.Random _random = new System.Random();
 
     public static void Shuffle<T>(this IList<T> list)
     {
@@ -10,10 +10,8 @@ public static class ListExtensions
         while (count > 1)
         {
             count--;
-            int index = random.Next(count + 1);
-            T value = list[index];
-            list[index] = list[count];
-            list[count] = value;
+            int index = _random.Next(count + 1);
+            (list[index], list[count]) = (list[count], list[index]);
         }
     }
 }
