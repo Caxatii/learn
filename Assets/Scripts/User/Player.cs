@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace Mono.User
 {
-    [RequireComponent(typeof(GroundDetector), typeof(GroundedMove), typeof(RigidbodyJumper)), 
+    [RequireComponent(typeof(GroundDetector), typeof(GroundedMover), typeof(RigidbodyJumper)), 
      RequireComponent(typeof(UserInputReader))]
     public class Player : MonoBehaviour
     {
         [SerializeField] private HumanoidAnimator _animator;
         [SerializeField] private ObjectFlipper _flipper;
         
-        private GroundedMove _mover;
+        private GroundedMover _mover;
         private UserInputReader _input;
         private RigidbodyJumper _jumper;
         private GroundDetector _groundDetector;
@@ -22,7 +22,7 @@ namespace Mono.User
             _groundDetector = GetComponent<GroundDetector>();
             _jumper = GetComponent<RigidbodyJumper>();
             _input = GetComponent<UserInputReader>();
-            _mover = GetComponent<GroundedMove>();
+            _mover = GetComponent<GroundedMover>();
         }
         
         private void Update()

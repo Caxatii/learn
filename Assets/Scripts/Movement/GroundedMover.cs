@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Mono.Movement
 {
     [RequireComponent(typeof(GroundDetector), typeof(RigidbodyMover))]
-    public class GroundedMove : MonoBehaviour
+    public class GroundedMover : MonoBehaviour
     {
         [SerializeField] private float _speed;
         
