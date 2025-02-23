@@ -1,9 +1,8 @@
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Mono.AIBehaviour
 {
-    public class Haunting : IAIBehaviour
+    public class Hunting : IAIBehaviour
     {
         private Transform _target;
 

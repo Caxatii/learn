@@ -1,12 +1,19 @@
-﻿namespace Mono.Environment
+﻿using System;
+using UnityEngine;
+
+namespace Mono.Environment
 {
+    [Serializable]
     public class Coin
     {
+        [SerializeField] private int _value;
+        
         public Coin(int value)
         {
-            Value = value;
+            _value = value;
         }
 
-        public int Value { get; }
+        public int Value => 
+            _value;
     }
 }

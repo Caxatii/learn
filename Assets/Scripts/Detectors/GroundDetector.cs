@@ -1,46 +1,29 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Mono.Detectors
 {
     [RequireComponent(typeof(Collider2D))]
-    public class GroundDetector : MonoBehaviour, IGroundDetector
+    public class GroundDetector : MonoBehaviour
     {
-        [SerializeField, Range(0, 1)] private float _maxSlope;
-
-        private int _contactsCount;
-        public event Action<bool> Changed;
-
+        [SerializeField] private ContactFilter2D _contactFilter;
+        
+        private Collider2D _collider;
+        private List<ContactPoint2D> _contacts = new();
+        
         public bool IsGrounded { get; private set; }
+        public Vector2 ContactNormal { get; private set; }
 
-        private void OnCollisionStay2D(Collision2D collision)
+        private void Awake()
         {
-            if (_contactsCount == collision.contactCount)
-                return;
-
-            IsGrounded = GetGrounded(collision);
-            _contactsCount = collision.contactCount;
+            _collider = GetComponent<Collider2D>();
         }
 
-        private void OnCollisionExit2D(Collision2D collision)
+        private void Update()
         {
-            _contactsCount = 0;
-            IsGrounded = false;
-            Changed?.Invoke(IsGrounded);
-        }
-
-        private bool GetGrounded(Collision2D collision)
-        {
-            bool isGrounded = false;
-
-            foreach (ContactPoint2D contact in collision.contacts)
-                if (contact.normal.y >= _maxSlope)
-                    isGrounded = true;
-
-            if (IsGrounded != isGrounded)
-                Changed?.Invoke(isGrounded);
-
-            return isGrounded;
+            IsGrounded = _collider.GetContacts(_contactFilter, _contacts) > 0;
+            ContactNormal = _contacts.FirstOrDefault().normal;
         }
     }
 }

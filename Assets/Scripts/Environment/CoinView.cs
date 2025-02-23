@@ -1,14 +1,19 @@
+using System;
 using UnityEngine;
 
 namespace Mono.Environment
 {
-    public class CoinView : MonoBehaviour
+    public class CoinView : Collectable
     {
-        public Coin Coin {  get; private set; }
+        [SerializeField] private Coin _coin;
+        
+        public override event Action<Collectable> Collected;
 
-        public void Initialize(Coin coin)
+        public Coin Collect()
         {
-            Coin ??= coin;
+            Collected?.Invoke(this);
+            return _coin;
         }
+
     }
 }

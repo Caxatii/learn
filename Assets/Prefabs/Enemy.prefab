@@ -974,8 +974,8 @@ GameObject:
   - component: {fileID: 7045524676546670594}
   - component: {fileID: 1787195421019248351}
   - component: {fileID: 7561950431791811430}
-  - component: {fileID: 4269745030280517725}
   - component: {fileID: 6720975896614686706}
+  - component: {fileID: 8888812623411056564}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -997,7 +997,7 @@ Transform:
   m_Children:
   - {fileID: 7759440243675507747}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1787195421019248351
 Rigidbody2D:
@@ -1061,19 +1061,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0.12, y: 0.4}
   m_Size: {x: 1, y: 2.56}
   m_Direction: 0
---- !u!114 &4269745030280517725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6167078692771881773}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9edf9bcc6fa24b94a90d38bd342f48ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 3
 --- !u!114 &6720975896614686706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1091,6 +1078,18 @@ MonoBehaviour:
   _searchRadius: 6
   _animator: {fileID: 8949160824992385989}
   _flipper: {fileID: 4516088538291865639}
+--- !u!114 &8888812623411056564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6167078692771881773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fca1c21338342fca2272c373b29c16b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6427348542725857187
 GameObject:
   m_ObjectHideFlags: 0

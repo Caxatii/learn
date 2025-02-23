@@ -5,72 +5,55 @@ using UnityEngine;
 
 namespace Mono.User
 {
-    [RequireComponent(typeof(IMover), typeof(IJumper), typeof(GroundDetector))]
+    [RequireComponent(typeof(GroundDetector), typeof(GroundedMove), typeof(RigidbodyJumper)), 
+     RequireComponent(typeof(UserInputReader))]
     public class Player : MonoBehaviour
     {
         [SerializeField] private HumanoidAnimator _animator;
         [SerializeField] private ObjectFlipper _flipper;
-    
-        private float _horizontal;
-        private IPhysicMover _mover;
-        private IJumper _jumper;
-
+        
+        private GroundedMove _mover;
+        private UserInputReader _input;
+        private RigidbodyJumper _jumper;
         private GroundDetector _groundDetector;
-        private UserInputReader _userInput = new();
 
         private void Awake()
         {
-            _mover = GetComponent<IPhysicMover>();
-            _jumper = GetComponent<IJumper>();
             _groundDetector = GetComponent<GroundDetector>();
+            _jumper = GetComponent<RigidbodyJumper>();
+            _input = GetComponent<UserInputReader>();
+            _mover = GetComponent<GroundedMove>();
         }
-
-        private void OnEnable()
-        {
-            _groundDetector.Changed += _mover.SetIsGrounded;
-            _groundDetector.Changed += PlayGrounded;
-        }
-
-        private void OnDisable()
-        {
-            _groundDetector.Changed -= _mover.SetIsGrounded;
-            _groundDetector.Changed -= PlayGrounded;
-        }
-
-        private void FixedUpdate()
-        {
-            _mover.Move(_horizontal);
-        }
-
+        
         private void Update()
         {
-            _horizontal = _userInput.Horizontal;
-
+            UpdateAnimator();
+        }
+        
+        private void FixedUpdate()
+        {
+            _mover.Move(_input.GetHorizontal());
             Jump();
-            PlayAnimation();
         }
 
         private void Jump()
         {
-            if (_userInput.IsJumped)
-                if (_jumper.TryJump())
-                {
-                    _mover.SetIsGrounded(false);
-                    _animator.PlayJumping();
-                }
+            if (_input.GetIsJump() && _groundDetector.IsGrounded)
+            {
+                _jumper.Jump();
+                _animator.PlayJumping();
+            }
         }
 
-        private void PlayAnimation()
+        private void UpdateAnimator()
         {
-            _animator.PlayWalking(_horizontal != 0);
+            float horizontal = _input.GetHorizontal();
+            
+            _animator.PlayWalking(horizontal != 0);
+            _animator.PlayGrounded(_groundDetector.IsGrounded);
 
-            if (_horizontal != 0)
-                _flipper.Flip(_horizontal < 0);
-        }
-
-        private void PlayGrounded(bool isGrounded)
-        {
-            _animator.PlayGrounded(isGrounded);
+            if (horizontal != 0)
+                _flipper.Flip(horizontal < 0);
         }
     }
 }

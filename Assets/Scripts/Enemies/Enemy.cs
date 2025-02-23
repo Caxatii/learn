@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Mono.Enemies
 {
-    [RequireComponent(typeof(IPhysicMover))]
+    [RequireComponent(typeof(RigidbodyMover))]
     public class Enemy : MonoBehaviour
     {
         [SerializeField] private bool _alive;
@@ -18,45 +18,46 @@ namespace Mono.Enemies
 
         [SerializeField] private HumanoidAnimator _animator;
         [SerializeField] private ObjectFlipper _flipper;
-
-        private float _horizontal;
         
-        private IPhysicMover _mover;
-        private IAIBehaviour _hunting;
-        private IAIBehaviour _patrolling;
-        private IAIBehaviour _currentAIBehaviour;
-
+        private float _direction;
+        
+        private IAIBehaviour _currentAI;
+        private Patrolling _patrollingAI;
+        private Hunting _huntingAI;
+        
         private CircleDetector _circleDetector;
+        private RigidbodyMover _mover;
 
         private void Awake()
         {
-            _mover = GetComponent<IPhysicMover>();
             _circleDetector = new(_searchRadius);
-            _hunting = new Haunting();
-            _patrolling = new Patrolling(transform.position);
-            _currentAIBehaviour = _patrolling;
+            _mover = GetComponent<RigidbodyMover>();
+
+            _patrollingAI = new(transform.position);
+            _huntingAI = new Hunting();
             
+            SwitchBehaviour(_patrollingAI);
             StartCoroutine(SearchTarget());
         }
 
         private void Update()
         {
-            _horizontal = _currentAIBehaviour.GetDirection(transform.position).x;
-            PlayAnimations();
+            _direction = _currentAI.GetDirection(transform.position).x;
+            UpdateAnimator();
         }
 
         private void FixedUpdate()
         {
-            _mover.Move(_horizontal);
+            _mover.AddVelocity(_direction);
         }
 
-        private void PlayAnimations()
+        private void UpdateAnimator()
         {
             float minValue = 0.01f;
-            _animator.PlayWalking(_horizontal * _horizontal > minValue);
+            _animator.PlayWalking(_direction * _direction > minValue);
             
-            if (_horizontal != 0)
-                _flipper.Flip(_horizontal < 0);
+            if (_direction != 0)
+                _flipper.Flip(_direction < 0);
         }
         
         private IEnumerator SearchTarget()
@@ -67,12 +68,12 @@ namespace Mono.Enemies
             {
                 if(_circleDetector.TryGet(transform.position, out Player target))
                 {
-                    _hunting.SetTarget(target.transform);
-                    SwitchBehaviour(_hunting);
+                    _huntingAI.SetTarget(target.transform);
+                    SwitchBehaviour(_huntingAI);
                 }
                 else
                 {
-                    SwitchBehaviour(_patrolling);
+                    SwitchBehaviour(_patrollingAI);
                 }
                     
                 yield return delay;
@@ -81,10 +82,10 @@ namespace Mono.Enemies
 
         private void SwitchBehaviour(IAIBehaviour behaviour)
         {
-            if(_currentAIBehaviour == behaviour)
+            if(_currentAI == behaviour)
                 return;
             
-            _currentAIBehaviour = behaviour;
+            _currentAI = behaviour;
         }
     }
 }

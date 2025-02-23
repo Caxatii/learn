@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Mono.Environment
+namespace Mono.Environment.Spawners
 {
-    public class CoinsSpawner : MonoBehaviour
+    public class CollectableSpawner : MonoBehaviour
     {
         [SerializeField] private bool _isRandom;
         [SerializeField] private int _minCount;
 
-        [SerializeField] private CoinView _prefab;
+        [SerializeField] private Collectable _prefab;
         [SerializeField] private List<Transform> _points;
-
+        
         private void Awake()
         {
             if (_minCount > _points.Count)
@@ -24,10 +24,14 @@ namespace Mono.Environment
 
         private void Spawn()
         {
-            foreach (var point in _points)
-            {
-                Instantiate(_prefab, point.position, Quaternion.identity).Initialize(new Coin(1));
-            }
+            foreach (var point in _points) 
+                Create(point.position);
+        }
+
+        private void OnDestroyPrefab(Collectable prefab)
+        {
+            prefab.Collected -= OnDestroyPrefab;
+            Destroy(prefab.gameObject);
         }
 
         private void SpawnRandom()
@@ -35,10 +39,13 @@ namespace Mono.Environment
             _points.Shuffle();
             int count = Random.Range(_minCount, _points.Count);
 
-            for(int i = 0; i < count; i++)
-            {
-                Instantiate(_prefab, _points[i].position, Quaternion.identity).Initialize(new Coin(1));
-            }
+            for(int i = 0; i < count; i++) 
+                Create(_points[i].position);
+        }
+
+        private void Create(Vector3 position)
+        {
+            Instantiate(_prefab, position, Quaternion.identity).Collected += OnDestroyPrefab;
         }
     }
 }

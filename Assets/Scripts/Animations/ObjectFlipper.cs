@@ -6,6 +6,9 @@ namespace Mono.Animations
     {
         [SerializeField] private Transform _pivot;
 
+        private readonly Quaternion _original = Quaternion.identity;
+        private readonly Quaternion _flipped = Quaternion.Euler(0, -180, 0);
+        
         private void Awake()
         {
             if (_pivot == null)
@@ -14,11 +17,7 @@ namespace Mono.Animations
 
         public void Flip(bool isFlipped)
         {
-            float flippedY = -180;
-            float rotationY = isFlipped ? flippedY : 0;
-            Quaternion newRotation = Quaternion.Euler(0, rotationY, 0);
-
-            _pivot.rotation = newRotation;
+            _pivot.rotation = isFlipped ? _flipped : _original;
         }
     }
 }
