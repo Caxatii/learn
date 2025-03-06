@@ -10,5 +10,10 @@ namespace Mono.Animations
             public static readonly int IsGrounded = Animator.StringToHash(nameof(IsGrounded));
             public static readonly int Jumping = Animator.StringToHash(nameof(Jumping));
         }
+        
+        public static class Interactions
+        {
+            public static readonly int Died = Animator.StringToHash(nameof(Died));
+        }
     }
 }

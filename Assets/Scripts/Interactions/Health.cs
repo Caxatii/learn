@@ -3,27 +3,45 @@ using Mono.Environment;
 using UnityEngine;
 
 namespace Mono.Interactions
-{//coming soon
+{
     public class Health :  MonoBehaviour, IDamageable
     {
-        private float _health;
-        private float _maxHealth;
-        public event Action Died;   
+        [SerializeField] private float _health;
+        [SerializeField] private float _maxHealth;
         
-        public void TakeDamage(float damage)
+        public event Action Died;   
+        public event Action<GameObject> Damaged;
+        
+        public void TakeDamage(float damage, GameObject attacker)
         {
-            _health -= damage;
+            if(damage < 0)
+                throw new InvalidOperationException("Damage can't be less than 0");
             
-            if(_health <= 0)
+            if(_health == 0)
+                return;
+            
+            _health -= damage;
+            Damaged?.Invoke(attacker);
+            
+            ClampHealth();
+            
+            if(_health == 0)
                 Died?.Invoke();
         }
 
         public void Heal(Medicine heal)
         {
+            if(heal.Value < 0)
+                throw new InvalidOperationException("Health can't be less than 0");
+            
             _health += heal.Value;
             
-            if(_health > _maxHealth)
-                _health = _maxHealth;
+            ClampHealth();
+        }
+
+        private void ClampHealth()
+        {
+            _health = Mathf.Clamp(_health, 0, _maxHealth);
         }
     }
 }

@@ -3,27 +3,30 @@ using System.Collections;
 using Mono.AIBehaviour;
 using Mono.Animations;
 using Mono.Detectors;
+using Mono.Interactions;
 using Mono.Movement;
 using Mono.User;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Mono.Enemies
 {
     [RequireComponent(typeof(RigidbodyMover))]
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] private bool _alive;
         [SerializeField] private float _searchDelay;
         [SerializeField] private float _searchRadius;
 
         [SerializeField] private HumanoidAnimator _animator;
         [SerializeField] private ObjectFlipper _flipper;
         
+        private bool _isLive;
         private float _direction;
         
         private IAIBehaviour _currentAI;
         private Patrolling _patrollingAI;
         private Hunting _huntingAI;
+        private Coroutine _coroutine;
         
         private CircleDetector _circleDetector;
         private RigidbodyMover _mover;
@@ -37,7 +40,18 @@ namespace Mono.Enemies
             _huntingAI = new Hunting();
             
             SwitchBehaviour(_patrollingAI);
-            StartCoroutine(SearchTarget());
+        }
+        
+        private void OnEnable()
+        {
+            _isLive = true;
+            _coroutine = StartCoroutine(SearchTarget());
+        }
+
+        private void OnDisable()
+        {
+            _isLive = false;
+            StopCoroutine(_coroutine);
         }
 
         private void Update()
@@ -64,7 +78,7 @@ namespace Mono.Enemies
         {
             var delay = new WaitForSeconds(_searchDelay);
 
-            while(_alive)
+            while(_isLive)
             {
                 if(_circleDetector.TryGet(transform.position, out Player target))
                 {
@@ -80,6 +94,12 @@ namespace Mono.Enemies
             }
         }
 
+        private IEnumerator SomeMethod()
+        {
+            _isLive = false;
+            yield return null;
+        }
+        
         private void SwitchBehaviour(IAIBehaviour behaviour)
         {
             if(_currentAI == behaviour)
