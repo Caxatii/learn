@@ -8,9 +8,15 @@ namespace Mono.Interactions
     {
         [SerializeField] private float _health;
         [SerializeField] private float _maxHealth;
-        
+
+        public float CurrentHealth => _health;
+        public float MaxHealth => _maxHealth;
+
         public event Action Died;   
         public event Action<GameObject> Damaged;
+        
+        public event Action<float> HealthChanged;
+        
         
         public void TakeDamage(float damage, GameObject attacker)
         {
@@ -22,6 +28,7 @@ namespace Mono.Interactions
             
             _health -= damage;
             Damaged?.Invoke(attacker);
+            HealthChanged?.Invoke(_health);
             
             ClampHealth();
             
@@ -35,6 +42,7 @@ namespace Mono.Interactions
                 throw new InvalidOperationException("Health can't be less than 0");
             
             _health += heal.Value;
+            HealthChanged?.Invoke(_health);
             
             ClampHealth();
         }
