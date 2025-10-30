@@ -9,5 +9,8 @@ namespace Mono.User
 
         public bool IsJump =>
             Input.GetKeyDown(KeyCode.Space);
+        
+        public bool IsCast =>
+            Input.GetKeyDown(KeyCode.E);
     }
 }

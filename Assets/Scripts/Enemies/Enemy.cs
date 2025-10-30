@@ -23,7 +23,7 @@ namespace Mono.Enemies
         private bool _isLive;
         private float _direction;
         
-        private IAIBehaviour _currentAI;
+        private IBehaviour _current;
         private Patrolling _patrollingAI;
         private Hunting _huntingAI;
         private Coroutine _coroutine;
@@ -56,7 +56,7 @@ namespace Mono.Enemies
 
         private void Update()
         {
-            _direction = _currentAI.GetDirection(transform.position).x;
+            _direction = _current.GetDirection(transform.position).x;
             UpdateAnimator();
         }
 
@@ -100,12 +100,12 @@ namespace Mono.Enemies
             yield return null;
         }
         
-        private void SwitchBehaviour(IAIBehaviour behaviour)
+        private void SwitchBehaviour(IBehaviour behaviour)
         {
-            if(_currentAI == behaviour)
+            if(_current == behaviour)
                 return;
             
-            _currentAI = behaviour;
+            _current = behaviour;
         }
     }
 }

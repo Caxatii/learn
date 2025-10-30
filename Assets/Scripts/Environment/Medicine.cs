@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Mono.Environment
 {
     [Serializable]
-    public class Medicine
+    public struct Medicine
     {
         [SerializeField] private float _value;
         

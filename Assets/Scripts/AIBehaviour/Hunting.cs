@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Mono.AIBehaviour
 {
-    public class Hunting : IAIBehaviour
+    public class Hunting : IBehaviour
     {
         private Transform _target;
 

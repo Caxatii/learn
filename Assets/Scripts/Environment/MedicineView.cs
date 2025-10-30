@@ -11,7 +11,7 @@ namespace Mono.Environment
         
         public void Initialize(Medicine medicine)
         {
-            _medicine ??= medicine;
+            _medicine = medicine;
         }
         
         public Medicine Collect()

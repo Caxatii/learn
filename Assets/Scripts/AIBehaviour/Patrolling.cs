@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Mono.AIBehaviour
 {
-    public class Patrolling : IAIBehaviour
+    public class Patrolling : IBehaviour
     {
         private Vector3 _patrolPoint;
 
